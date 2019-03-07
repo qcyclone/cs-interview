@@ -22,4 +22,4 @@ if(mp.find(key) != mp.end() ) 判断是否存在
 ### cache
 * 直接映射
 * 组相联映射
-* 全相联映射, 适用小容量cache
+* 全相联映射，适用小容量cache
