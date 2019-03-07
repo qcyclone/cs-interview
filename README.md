@@ -2,11 +2,11 @@
 
 ## C++
 ### C++ STL 
-c++中哈希表对应的容器  unordered_map<int, int> mp  查找复杂度 o(1)
+1. unordered_map<int, int>mp c++中哈希表对应的容器    查找复杂度 o(1)
 
-map<int, int> mp  底层红黑树实现 插入查找删除复杂度 logn， 插入n个元素就是nlogn
+2. map<int, int> mp  底层红黑树实现 插入查找删除复杂度 logn， 插入n个元素就是nlogn
 
-if(mp.find(key) != mp.end() )
+if(mp.find(key) != mp.end() ) 判断是否存在
 
 ## 计网
 客户端和服务器都可主动发起挥手动作，对应socket编程的close()，任何一方都可发起
@@ -22,4 +22,4 @@ if(mp.find(key) != mp.end() )
 ### cache
 * 直接映射
 * 组相联映射
-* 全相联映射
+* 全相联映射, 适用小容量cache
