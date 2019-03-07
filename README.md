@@ -10,4 +10,5 @@ if(mp.find(key) != mp.end() )
 
 ## 计网
 客户端和服务器都可主动发起挥手动作，对应socket编程的close()，任何一方都可发起
+
 连接动作connect()，对应三次握手，accept()从队列中取出连接
