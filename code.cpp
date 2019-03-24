@@ -1,5 +1,5 @@
 //BST左子树所有节点都比根小，右子树所有节点都比根大
-```
+
 bool isBST(node* root, int x, int y){ //判断是否为BST, 返回条件一个true，一个false
     if(root == null)//
         return true;
@@ -8,7 +8,7 @@ bool isBST(node* root, int x, int y){ //判断是否为BST, 返回条件一个tr
         return false;
     return isBST(root.l, x, root.val) &&  isBST(root.r, root.val, y);
 }
-```
+
 int pre;
 bool isBST(node* root){ //递归中序遍历，没有临时数组
     if(root == null)
