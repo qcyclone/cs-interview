@@ -1,5 +1,5 @@
 //BST左子树所有节点都比根小，右子树所有节点都比根大
-
+1.判断是否为BST
 bool isBST(node *root, int x, int y){ //判断是否为BST, 返回条件一个true，一个false
     if(root == null)//
         return true;
@@ -10,7 +10,7 @@ bool isBST(node *root, int x, int y){ //判断是否为BST, 返回条件一个tr
 }
 
 int pre;
-bool isBST(node* root){ //递归中序遍历，没有临时数组
+bool isBST(node *root){ //递归中序遍历，没有临时数组
     if(root == null)
         return true;
     if(! isBST(root->left)) return false;
@@ -36,7 +36,7 @@ bool isValidBST(TreeNode* root) {
 }
 };
 
-
+2. 非递归中序遍历
 vector<int> inorderTraversal(TreeNode* root) { //非递归
     vector<int> ans;
     //if(root == NULL)    return ans;
@@ -54,7 +54,7 @@ vector<int> inorderTraversal(TreeNode* root) { //非递归
     return ans;
 }
 
-
+3.递归中序遍历
 void inOrder(node* root){ //递归
     if(root == null)
         return;
@@ -62,7 +62,7 @@ void inOrder(node* root){ //递归
     res.push_back(root->val);
     inOrder(root.right);
 }
-
+4.非递归先序遍历
 void preOrder(node* root) {//非递归
     stack<int> s;
     s.push(root);
@@ -75,13 +75,13 @@ void preOrder(node* root) {//非递归
     }
 }
 
-二叉树中序遍历的下一个节点
-1. 有右子树，下一个就是 右子树 中最左节点
-2. 如没右，如果cur是左子树，那么就是它父节点
+5. 二叉树中序遍历的下一个节点
+1) 有右子树，下一个就是 右子树 中最左节点
+2) 如没右，如果cur是左子树，那么就是它父节点
                  右子树，向上找，直到找到一个左分叉，答案就是它的父节点
+
 node* getNext(node* root){
     if(root==null)  return null;
-
     node* ans = null;
     if(root->r != null){
         node* pRight = root->r;
@@ -99,7 +99,7 @@ node* getNext(node* root){
     }
     return ans;
 }
-
+6.快速幂
 double power(double base, int exponse){
     if(exponse==0)  return 1;
     if(exponse==1) return  base;
@@ -110,7 +110,9 @@ double power(double base, int exponse){
     return  result;
 }
 
-BST每个节点都加上其后所有节点
+
+7.BST每个节点都加上其后所有节点
+遍历顺序为 右根左
 int sum=0;
 void addBiger(node* root){
     if(root == null)
@@ -121,7 +123,7 @@ void addBiger(node* root){
     addBiger(root->l)
 }
 
-BST的最近公共祖先
+8. BST的最近公共祖先
 TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
     if(root==NULL || root==p || root==q)
         return root;
@@ -134,7 +136,7 @@ TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
     return left;
 }
 
-BST中第K大的数字
+9. BST中第K大的数字
 //需要用到全局变量，因为左下角递归到时并不是第一个k==0
 class Solution {
     int time = 0;
@@ -169,7 +171,7 @@ public:
     }
 };
 
-对称二叉树 -> 判断两个树是否镜像
+10. 对称二叉树 -> 判断两个树是否镜像
 //递归，时间 空间 o(N)
 //判断两个树, 一棵树只能向一个方向遍历，不能同时兼顾两侧
 //所以这里要用两个递归过程
@@ -206,13 +208,13 @@ public boolean isSymmetric(TreeNode root) {
 return true;
 }
 
-//树的最小/最大 深度
+11. 树的最小/最大 深度
 public:
 int minDepth(TreeNode* root) {
     if(root==NULL)  return 0;
     int l = minDepth(root->left) + 1;
     int r = minDepth(root->right) + 1;
-    if(l==1 || r==1)
+    if(l==1 || r==1) //如果有一侧没有子树，则高度为另一侧
         return max(l,r);
     return min(l,r);
 }
@@ -225,7 +227,7 @@ public:l
     }
 };
 
-****二叉树展开为链表
+12. 二叉树展开为单链表
 //顺序为 右左根，想象成一个栈的顺序
 class Solution {  
 public:
@@ -241,7 +243,8 @@ public:
     }
 };
 
-//有序链表 --> BST，快慢指针
+13. 有序链表 --> BST，快慢指针
+
     TreeNode* sortedListToBST(ListNode* head) {
         return my(head,nullptr);
     }
@@ -261,7 +264,8 @@ public:
         return root;
     } 
 
-//BST->双向链表
+
+14. BST->双向链表
 class Solution {
 public:
     TreeNode* pre = NULL;
@@ -288,7 +292,7 @@ public:
     }
 };
 
-合并二叉树
+15. 合并二叉树
 class Solution {
 public:
     TreeNode* mergeTrees(TreeNode* t1, TreeNode* t2) {
@@ -306,9 +310,8 @@ public:
     }
 };
 
-树的直径
-//实际就是求最大深度时，对于每个节点对左右子树的深度加和并
-//求最大值
+16. 树的直径
+//实际就是求最大深度时，对于每个节点对左右子树的深度加和并求最大值
 class Solution {
 public:
     int ans =0;
