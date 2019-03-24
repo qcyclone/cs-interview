@@ -1,6 +1,6 @@
 //BST左子树所有节点都比根小，右子树所有节点都比根大
 
-bool isBST(node* root, int x, int y){ //判断是否为BST, 返回条件一个true，一个false
+bool isBST(node *root, int x, int y){ //判断是否为BST, 返回条件一个true，一个false
     if(root == null)//
         return true;
     if(root.val < x || root.val > y)//如果中间有不符合条件的，直接返回,不用再判断后面
