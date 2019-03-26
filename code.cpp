@@ -123,8 +123,9 @@ void addBiger(node* root){
     addBiger(root->l)
 }
 
-8. BST的最近公共祖先
+8. 二叉树的最近公共祖先
 TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+    //有可能左边找不到，所以会有空的情况
     if(root==NULL || root==p || root==q)
         return root;
     TreeNode* left = lowestCommonAncestor( root->left,p, q);
@@ -134,6 +135,19 @@ TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
     if(left==NULL)
         return right;
     return left;
+}
+BST的最近公共祖先
+TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+        //只向一边去找，所以肯定会找到
+        if(root->val == p->val || root->val == q->val)
+            return root;
+        if(p->val < root->val && q->val > root->val)
+            return root;
+        if(q->val < root->val && p->val > root->val)
+            return root;
+        if(p->val < root->val && q->val < root->val)
+            return lowestCommonAncestor(root->left, p, q);
+        return lowestCommonAncestor(root->right,p, q);
 }
 
 9. BST中第K大的数字
@@ -145,14 +159,29 @@ public:
         if(root == NULL) return -1;
         int ans;
         ans = kthSmallest(root->left, k);
-        if(time==k)
+        if(time == k)//已经找到了答案
             return ans;
-        if(++time == k)
+        if(++time == k)//当前是答案
             return root->val;
         return kthSmallest(root->right, k);
     }
 };
-//没用到全局变量，二分的思路
+//没用到全局变量，k是引用，也相当于是全局变量吧
+class Solution {
+public:
+    int kthSmallest(TreeNode* root, int& k) {
+        if(root==NULL)  return -1;
+        int ans = -1;
+        ans = kthSmallest(root->left, k);
+        if(ans != -1)
+            return ans;
+        if(k == 1)//找到了答案就要返回，否则会向右找，找不到答案(-1)
+            return ans = root->val;
+        k--;   
+        return kthSmallest(root->right, k);
+    }
+};
+//没用到全局变量，二分的思路, 复杂度nlogn
 class Solution {
 public:
     int getNodeNum(TreeNode* root){
@@ -328,4 +357,90 @@ public:
         return ans;
     }
 };
+17. min栈
+每次入栈和栈头部元素比较。
+void push(int x) {
+    if(a.empty()){
+        a.push(x);
+        b.push(x);
+    }else{
+        a.push(x);
+        b.push(min(x,b.top()));
+    }
+}
 
+18. 队列的最大值，滑动窗口
+越后面新来的元素，如果较大，肯定会覆盖前面的元素
+每次从队列头取最大值，递减队列，并且存储下标，方便知道哪个元素离开窗口
+class Solution {
+public:
+    vector<int> maxSlidingWindow(vector<int>& num, int k) {
+        vector<int> ans;
+        deque<int> win;
+        int len = num.size();
+        for(int i = 0;i < len;i++){
+            //注意要判断为是否为空, 超出了窗口范围
+            if(!win.empty() && i - win.front() >= k)
+                win.pop_front();
+            while(!win.empty() && num[i] > num[win.back()])
+                win.pop_back();
+            win.push_back(i);
+            if(i >= k - 1)
+                ans.push_back(num[win.front()]);
+        }
+        return ans;
+    }
+};
+
+19. 模拟约瑟夫环
+class Solution {
+public:
+    int LastRemaining_Solution(int n, int m){
+        if(n<1 || m<1)    return -1;
+        vector<int> vis(n, 0);
+        int st = 0;
+        int ans = -1;
+        for(int i = 0;i < n;i++){
+            int cur = 0 ;
+            while(cur < m){
+                if(vis[st] == 0){
+                    cur++;
+                    if(cur == m){
+                        ans = st;
+                        vis[st] = 1;
+                    }
+                }
+                st = (st + 1) % n;
+            }
+        }
+        return ans;
+    }
+};
+
+20. 乘积数组
+**vector不指定长度，不能够随机访问
+class Solution {
+public:
+    vector<int> multiply(const vector<int>& A) {
+        int len = A.size();
+        vector<int> l(len);
+        vector<int> r(len);
+        vector<int> ans(len);
+        if(len < 1)
+            return ans;
+        l[0] = A[0];
+        for(int i = 1;i < len;i++){
+            l[i] = l[i-1] * A[i];
+        }
+        r[len-1] = A[len-1];
+        for(int i=len-2;i>=0;i--){
+            r[i] = r[i+1] * A[i];
+        }
+        ans[0] = r[1];
+        ans[len-1] = l[len-2];
+        for(int i = 1;i < len-1;i++){
+            ans[i] = l[i-1]*r[i+1];
+        }
+        return ans;
+    }
+};
