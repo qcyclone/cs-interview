@@ -444,3 +444,87 @@ public:
         return ans;
     }
 };
+
+21.旋转数组找最小值
+int findMin(vector<int>& nums) {
+    int l = 0;
+    int r = nums.size() - 1; //右闭区间，因为下面要获取nums[r]
+    int mid;
+    while(l < r){
+        mid = (l+r)/2;
+        if(nums[mid] < nums[r])
+            r= mid;
+        else
+            l = mid+1;
+    }
+    return nums[l];
+}
+
+22.旋转数组找最小值,有重复元素
+int findMin(vector<int>& nums) {
+    int l = 0;
+    int r = nums.size() - 1; //右闭区间，因为下面要获取nums[r]
+    int mid;
+    while(l < r){
+        mid = (l+r)/2;
+        if(nums[mid] < nums[r])
+            r = mid;
+        else if(nums[mid] > nums[r])
+            l = mid+1;
+        else
+            r--; 
+    }
+    return nums[l];
+}
+23.搜索旋转数组
+int search(vector<int>& nums, int target) {
+    if(nums.size() == 0 )
+        return -1;
+    int l = 0;
+    int r = nums.size() - 1; //右闭区间，因为下面要获取nums[r]
+    int mid;
+    while(l <= r){   //等于
+        mid = (l+r)/2;
+        if(nums[mid] == target)
+            return mid;
+        if(nums[mid] < nums[r]){
+            if(target <= nums[r] && nums[mid] < target)//只有一个等号
+                l = mid + 1;
+            else
+                r = mid;   //-1也可以，可能是因为循环内有返回
+        }else{
+            if(target > nums[r] && nums[mid] > target)
+                r = mid;
+            else
+                l = mid + 1;  
+        }     
+    }
+    return -1;
+}
+
+24.搜索旋转数组，有重复值
+bool search(vector<int>& nums, int target) {
+    if(nums.size() == 0 )
+     return false;
+    int l = 0;
+    int r = nums.size() - 1; //右闭区间，因为下面要获取nums[r]
+    int mid;
+    while(l <= r){
+        mid = (l+r)/2;
+        if(nums[mid] == target)
+            return true;
+        if(nums[mid] < nums[r]){
+            if(target <= nums[r] && nums[mid] < target)
+                l = mid + 1;
+            else
+                r = mid;   //-1也可以，可能是因为循环内有返回
+        }else if(nums[mid] > nums[r]){
+            if(target > nums[r] && nums[mid] > target)
+                r = mid;
+            else
+                l = mid + 1;  
+        }else
+            r--;
+    }
+    return false;
+}
