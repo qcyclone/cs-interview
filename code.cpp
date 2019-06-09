@@ -668,3 +668,27 @@ int main(){
         cout<<arr[i]<<" ";
     return 0;
 }
+
+28. lc1. 两数之和
+map的用法，k-v不要反
+class Solution {
+public:
+    vector<int> twoSum(vector<int>& nums, int target) {
+        vector<int> res;
+        unordered_map<int, int> mp;
+        int len = nums.size();
+        for(int i = 0;i < len; i++){
+            mp[ nums[i] ] = i; //k-v
+        }
+        for(int i = 0;i < len; i++){
+            auto index = mp.find(target - nums[i]);
+            if(index != mp.end() && index->second != i){
+                //注意判断不能两个数相同
+                res.push_back(i);
+                res.push_back(index->second);
+                break;
+            }
+        }
+        return res;
+    }
+};
