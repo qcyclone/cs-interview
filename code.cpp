@@ -528,3 +528,143 @@ bool search(vector<int>& nums, int target) {
     }
     return false;
 }
+
+25. 分割链表
+头部各创建一个临时节点，注意这样实际是在原来链表空间上操作，会破坏原来链表。
+头指针不变，要作为返回值。再创建一个指针用于遍历；创建链表时不能为空。
+class Solution {
+public:
+    ListNode* partition(ListNode* head, int x) {
+        ListNode* l = new ListNode(0);
+        ListNode* r = new ListNode(0);
+        ListNode* p = l;
+        ListNode* q = r;
+        ListNode* tmp =  head;
+        while(tmp != NULL){
+            if(tmp -> val < x){
+                p->next = tmp; 
+                p = p -> next;
+            }else{
+                q -> next = tmp; 
+                q = q -> next;
+            }
+            tmp = tmp->next;
+        }
+        q->next = NULL; //注意要断开，否则会有死循环
+        p->next = r->next;
+        return l->next;
+    }
+};
+25.2 创建额外节点，不破坏原链表
+class Solution {
+public:
+    ListNode* partition(ListNode* head, int x) {
+        ListNode* l = new ListNode(0);  //创建一个临时节点，方便
+        ListNode* p = l;
+        ListNode* tmp =  head;
+        while(tmp != NULL){
+           if(tmp->val < x){
+               p -> next = new ListNode(tmp->val);
+               p = p -> next;
+           }
+           tmp = tmp -> next;
+        }
+        tmp = head;
+        while(tmp != NULL){
+           if(tmp->val >= x){
+               p -> next = new ListNode(tmp->val);
+               p = p -> next;
+           }
+          tmp = tmp -> next;
+        }
+        return l->next;
+    }
+};
+
+26. 反转链表
+class Solution {
+public:
+    ListNode* reverseList(ListNode* head) {
+        ListNode* pre = NULL;
+        ListNode* cur = head;
+        
+        ListNode* tmp = NULL;
+        while(cur != nullptr){
+            tmp = cur->next;
+            
+            cur->next = pre;
+            pre = cur;
+            cur = tmp;
+        }
+        return pre;
+    }
+};
+
+26.2 递归法
+class Solution {
+public:
+    ListNode* ans = NULL;
+    ListNode* fun(ListNode* cur){
+        if(cur == nullptr)
+            return nullptr;
+        if(cur -> next == nullptr) 
+            ans = cur;
+        ListNode* tmp = nullptr;
+        if(cur->next != nullptr){
+            tmp = fun(cur -> next);
+            tmp -> next = cur;
+        }
+        return cur;
+    }
+    ListNode* reverseList(ListNode* head) {
+        ListNode* tmp = fun(head);
+        if(tmp!= nullptr)
+            tmp->next = nullptr;
+        return ans;
+    }
+};
+26.3 简洁递归法，
+ListNode* reverseList(ListNode* head) {
+    if(head==nullptr || head->next==nullptr)
+        return head;
+    //第一个判断防止输入就是null
+    ListNode *p = reverseList(head -> next);
+    head -> next -> next = head;
+    head -> next = nullptr; 
+    //很重要，否则会死循环；后面的节点被覆盖，只允许覆盖空节点
+    return p;
+}
+
+27. 堆排序，堆是种特殊的完全二叉树，是一种选择排序。
+最坏，最好，平均时间复杂度均为O(nlogn)，它也是不稳定排序。
+void adjustHeap(int *arr, int i, int len){
+    int tmp = arr[i];
+    for(int k = 2*i+1; k < len; k = k*2+1){
+        if(k+1<len && arr[k] < arr[k+1])
+            k++;
+        if(tmp < arr[k]){//每次要用tmp比较
+            arr[i] = arr[k];
+            i = k; //记录前一次到达的节点i
+        }else{
+            break;
+        }
+    }
+    arr[i] = tmp;
+}
+void sort(int *arr,int len){
+    for(int i = len/2-1; i>=0; i--){
+        adjustHeap(arr, i, len);
+    }
+    for(int i = len-1;i > 0; i--){
+        swap(arr[0], arr[i]);
+        adjustHeap(arr, 0, i); //每次范围减小
+    }
+}
+//大根堆,从小到大排序
+int main(){
+    int arr[] = {8,7,3,6,2,4,9,1,5};
+    sort(arr, 9);
+    for(int i=0;i<9;i++)
+        cout<<arr[i]<<" ";
+    return 0;
+}
