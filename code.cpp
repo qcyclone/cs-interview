@@ -683,7 +683,7 @@ public:
         for(int i = 0;i < len; i++){
             auto index = mp.find(target - nums[i]);
             if(index != mp.end() && index->second != i){
-                //注意判断不能两个数相同
+                //注意判断 两个数不能相同
                 res.push_back(i);
                 res.push_back(index->second);
                 break;
