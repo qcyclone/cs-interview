@@ -625,13 +625,13 @@ public:
 };
 26.3 简洁递归法，
 ListNode* reverseList(ListNode* head) {
-    if(head==nullptr || head->next==nullptr)
-        return head;
     //第一个判断防止输入就是null
+    if(head == nullptr || head->next==nullptr)
+        return head;
     ListNode *p = reverseList(head -> next);
     head -> next -> next = head;
-    head -> next = nullptr; 
     //很重要，否则会死循环；后面的节点被覆盖，只允许覆盖空节点
+    head -> next = nullptr; 
     return p;
 }
 
@@ -690,5 +690,67 @@ public:
             }
         }
         return res;
+    }
+};
+
+29. lc2. 两数相加
+class Solution {
+public:
+    ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
+        //声明一个头结点，然后cur指向头结点，每次cur移动作为索引
+        //最后返回 head -> next
+        ListNode *head = new ListNode(0);
+        ListNode *cur = head;
+        
+        int carry = 0;
+        while(l1 != nullptr || l2 != nullptr){
+            int a,b;
+            a = 0;
+            b = 0;
+            if(l1 != nullptr){
+                a = l1->val;
+                l1 = l1->next;
+            }
+            if(l2 != nullptr){
+                b = l2->val;
+                l2 = l2->next;
+            }
+            ListNode *tmp = new ListNode((carry + a + b) % 10);
+            if(carry + a + b >= 10)
+                carry = 1;
+            else
+                carry = 0;
+            
+            cur -> next = tmp;
+            cur = cur->next;
+        }
+        if(carry == 1)
+           cur -> next = new ListNode(1);
+        return head->next;
+    }
+};
+
+30 无重复字符的最长子串
+//用滑动窗口，双指针
+class Solution {
+public:
+    int lengthOfLongestSubstring(string s) {
+        int ans = 0;
+        int len = s.size();
+        int a = 0;
+        int b = 0;
+        set<char> m;
+       	while(a <= b && b < len) {
+       		if(m.find(s[b]) != m.end() ){
+                m.erase(s[a]);
+       			a++;//搞清楚++的位置，先删除，再++
+       			
+       		}else{
+                m.insert(s[b]);
+       			b++;//先插入原来的值，++，再计算ans
+       			ans = max(ans, b - a);
+       		}
+       	}
+       	return ans;
     }
 };
