@@ -1,4 +1,4 @@
-//BST左子树所有节点都比根小，右子树所有节点都比根大
+//BST左子树 所有 节点都比根小，右子树 所有 节点都比根大
 1.判断是否为BST
 bool isBST(node *root, int x, int y){ //判断是否为BST, 返回条件一个true，一个false
     if(root == null)//
@@ -752,5 +752,120 @@ public:
        		}
        	}
        	return ans;
+    }
+};
+
+31.寻找两个有序数组的中位数？？？(背)
+这里相当于对K二分，每次调整k的大小，使其为1
+区别与传统二分，其是对数组大小二分，调整其大小，使其范围为1
+
+!!! size_type v.size() 无符号，如果空的v, 
+num1.size() - 1会返回一个极大的数，溢出
+
+class Solution {
+public:
+    double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2){
+        int m = nums1.size();
+        int n = nums2.size();
+        int l = (m + n + 1) / 2;
+        int r = (m+n+2)/2;
+        return (getKth(nums1,0,nums2,0,l)+getKth(nums1,0,nums2,0,r))/2.0;
+    }
+
+    int getKth(vector<int>& nums1, int start1, 
+               vector<int>& nums2, int start2, int k){
+        int lena = nums1.size();
+        int lenb = nums2.size();
+        if(start1 > lena - 1){
+            return nums2[start2 + k - 1];
+        }
+        if(start2 > nums2.size() - 1){
+            return nums1[start1+k-1];
+        }
+        if(k==1)
+            return min(nums1[start1],nums2[start2]);
+        int nums1Mid = start1 + k/2 - 1 < nums1.size()?nums1[start1+k/2-1]:INT_MAX;
+        int nums2Mid = start2 + k/2 - 1 < nums2.size()?nums2[start2+k/2-1]:INT_MAX;
+    //哪个数组的中间值小，就在哪里找。当越界后，标记为最大，保证不会在这里面找        
+        if(nums1Mid <nums2Mid)
+        //每次把范围大小折半，min(m,n)?
+            return getKth(nums1,start1+k/2,nums2,start2,k - k/2);
+        else
+            return getKth(nums1,start1,nums2,start2+k/2, k - k/2);
+    }                            
+};
+
+32.最长回文子串
+//主要是stl用法，n2复杂度
+class Solution {
+public:
+    int ans = 0;
+    int start;
+    string longestPalindrome(string s) {
+        int len = s.size();
+        for(int i = 0; i< len; i++){
+            isPalindrome(s, i, i);  //一种巧妙处理奇偶
+            isPalindrome(s, i, i + 1); 
+        }
+        return s.substr(start, ans);
+    }
+    void isPalindrome(string s, int a, int b){
+        int len = s.size();
+        while(a >= 0 && b <= len - 1){
+            if(s[a] == s[b]){
+                if(b-a+1 > ans){
+                    ans = b - a + 1;
+                    start = a;
+                }
+            }else{
+                return;
+            }
+            a--;
+            b++;
+        }
+        return;
+    }
+};
+
+33. Z字形变换
+class Solution {
+public:
+    string convert(string s, int numRows) {
+        //string数组的声明方式
+        vector<string> ansRow(numRows);
+        int cnt = 0;
+        int len = s.size();
+        while(cnt < len){
+            //注意加条件 cnt < len, 有cnt++的地方要判断
+            for(int i = 0 ;i < numRows && cnt < len; i++){
+                ansRow[i] += s[cnt++];
+            }
+            for(int i = numRows - 2; i >= 1 && cnt < len; i--){
+                ansRow[i] += s[cnt++];
+            }
+        }
+        string ans;
+        //按行存储，最后拼接
+        for(int i = 0; i< numRows; i++){
+            ans += ansRow[i];
+        }
+        return ans;
+    }
+};
+
+34. 整数反转
+//-17%10 = -7 所以这里不用考虑正负号
+注意判断溢出  -2^31, 2^31-1
+class Solution {
+public:
+    int reverse(int x) {
+        long long ans = 0;
+        while(x){
+            ans = ans * 10 + x % 10;
+            x/=10;
+            if( ans < INT_MIN || ans > INT_MAX)
+                return 0;
+        }
+        return ans;
     }
 };
