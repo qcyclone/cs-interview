@@ -24,6 +24,14 @@ vector<int>::iterator it = find(vec.begin(), vec.end(), 6);
 * vector<string> ansRow(numRows);
 
 3. 声明二维数组
+vector< vector<int> > vv
+
+4. **如果不声明大小，不能用下标访问**
+
+5. inserts value before pos
+*  insert(v.begin(), tmp) 
+实现头部插入，与push_back相反。
+* 或者可以reverse(v.begin(), v.end())
 
 ## string
 1. 返回长度
@@ -31,3 +39,6 @@ vector<int>::iterator it = find(vec.begin(), vec.end(), 6);
 * s.size(); s.length()
 2. 截取子串
 * s.substr(pos, count);
+
+## queue
+1. 用front()获取头部，栈是top
