@@ -867,3 +867,47 @@ public:
         return ans;
     }
 };
+
+35. 合并两个有序链表
+class Solution {
+public:
+    ListNode* mergeTwoLists(ListNode* l1, ListNode* l2) {
+        //首先有个实体节点，用于最后的返回。再搞个索引
+        ListNode* ans = new ListNode(-1); 
+        ListNode* p = ans;
+        while(l1 != nullptr && l2 != nullptr){
+            if(l1->val < l2-> val){
+                p  -> next = l1;
+                l1 = l1 -> next;
+            }else{
+                p -> next = l2;
+                l2 = l2 -> next;
+            }
+            p = p -> next;
+        }
+        if(l1 == nullptr)
+            p -> next = l2;
+        else
+            p -> next = l1;
+        return ans -> next;
+    }
+};
+//递归做法
+class Solution {
+public:
+    ListNode* mergeTwoLists(ListNode* l1, ListNode* l2) {
+        if(l1 == nullptr)
+            return l2;
+        if(l2 == nullptr)
+            return l1;
+        if(l1->val < l2->val){
+            l1->next = mergeTwoLists(l1->next, l2);
+            return l1;
+        } else {
+            l2 -> next = mergeTwoLists(l1, l2 -> next);
+            return l2;
+        }
+    }
+};
+
+36. 另一个树的子树
