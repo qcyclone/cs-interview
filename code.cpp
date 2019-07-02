@@ -581,17 +581,15 @@ public:
     }
 };
 
-26. 反转链表
+26. !!反转链表
 class Solution {
 public:
     ListNode* reverseList(ListNode* head) {
         ListNode* pre = NULL;
         ListNode* cur = head;
-        
         ListNode* tmp = NULL;
         while(cur != nullptr){
             tmp = cur->next;
-            
             cur->next = pre;
             pre = cur;
             cur = tmp;
@@ -623,10 +621,10 @@ public:
         return ans;
     }
 };
-26.3 简洁递归法，
+26.3 !!简洁递归法，
 ListNode* reverseList(ListNode* head) {
-    //第一个判断防止输入就是null
-    if(head == nullptr || head->next==nullptr)
+    //第一个判断防止输入就是null, 最后判断条件判断尾结点
+    if(head == nullptr || head->next==nullptr)  
         return head;
     ListNode *p = reverseList(head -> next);
     head -> next -> next = head;
