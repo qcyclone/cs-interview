@@ -994,3 +994,97 @@ public:
         return ans;
     }
 
+38. 栈的压入、弹出序列     
+bool validateStackSequences(vector<int>& pushed, vector<int>& popped) {
+    stack<int> s;
+    int i = 0;
+    int j = 0;
+    int len = pushed.size();
+    //考虑好循环条件，有一个就可以
+    while(i < len || j < len){
+        if(!s.empty() && s.top() == popped[j]){
+            s.pop();
+            j++;
+        }else{
+            if(i >= len)
+                break;
+            s.push(pushed[i]);
+            i++;
+        }
+    } 
+    if(i==len && j == len && s.empty())
+        return true;
+    return false;
+}
+
+39. !! 按行层次遍历二叉树
+vector<vector<int> > Print(TreeNode* pRoot) {
+    vector<vector<int>> ans;//
+    queue<TreeNode*> q;
+    if(pRoot == nullptr)
+        return ans;
+    q.push(pRoot);
+    while(!q.empty()){
+//关键，每次获取len
+        int len = q.size();
+        vector<int> v;//
+        for(int i = 0; i < len; i++){
+            TreeNode* tmp = q.front();
+            q.pop();
+            v.push_back( tmp -> val );//
+            if(tmp -> left != nullptr)
+                q.push(tmp->left);
+            if(tmp->right != nullptr)
+                q.push(tmp->right);
+        }
+        ans.push_back(v);//
+    }
+    return ans;
+}
+
+40. Z字形打印二叉树
+只需在39基础上
+if(lineNum % 2 == 0)
+    reverse(v.begin(), v.end());
+
+41. BST的后序遍历序列
+
+
+class Solution {
+public:
+    bool VerifySquenceOfBST(vector<int> sequence) {
+        int len = sequence.size();
+        ///递归要有退出条件
+        if(len == 0)
+            return false;
+        // if(len <= 1)
+        //     return true;
+        int root = sequence[len - 1];
+        int i = 0 ;
+        //加判断，别越界
+        while(sequence[i] < root && i < len - 1){
+            i++;
+        }
+        int j = i;
+        while(sequence[j] > root && j < len - 1){
+            j++;
+        }
+        if(j != len - 1)
+            return false;
+        //vector 截取
+        //左闭右开区间好处就是，下标连续的
+        vector<int> a(sequence.begin(), sequence.begin() + i );
+        vector<int> b(sequence.begin() + i, sequence.end() - 1);
+        bool ansA = false;
+        if(i <= 1)
+            ansA = true;
+        else
+            ansA = VerifySquenceOfBST(a);
+        bool ansB = false;
+        if(len - 1 - i <= 1)
+            ansB = true;
+        else
+            ansB = VerifySquenceOfBST(b);
+        return ansA && ansB;
+    }
+};
