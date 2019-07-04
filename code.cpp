@@ -1047,9 +1047,8 @@ vector<vector<int> > Print(TreeNode* pRoot) {
 if(lineNum % 2 == 0)
     reverse(v.begin(), v.end());
 
+
 41. BST的后序遍历序列
-
-
 class Solution {
 public:
     bool VerifySquenceOfBST(vector<int> sequence) {
