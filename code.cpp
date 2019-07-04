@@ -217,6 +217,8 @@ bool isMirror(TreeNode* t1, TreeNode* t2){
            isMirror(t1->left, t2->right) &&
            isMirror(t1->right, t2->left);
 }
+
+//也是同时处理两棵树
 //非递归，时间 空间 o(N)
 //有点类似于层次遍历
 public boolean isSymmetric(TreeNode root) {
@@ -236,6 +238,20 @@ public boolean isSymmetric(TreeNode root) {
     }
 return true;
 }
+10.1 二叉树的镜像，剑指
+
+class Solution {
+public:
+    void Mirror(TreeNode *pRoot) {
+        if(pRoot == nullptr)
+            return;
+        TreeNode* tmp = pRoot->left;
+        pRoot->left = pRoot->right;
+        pRoot->right = tmp;
+        Mirror(pRoot->right);
+        Mirror(pRoot->left);
+    }
+};
 
 11. 树的最小/最大 深度
 public:
@@ -911,3 +927,70 @@ public:
 };
 
 36. 另一个树的子树
+    bool HasSubtree(TreeNode* pRoot1, TreeNode* pRoot2)
+    {
+        bool ans = false;
+        //注意判断空指针
+        if(pRoot1 == nullptr || pRoot2 == nullptr)
+            return ans;
+        if(pRoot1->val == pRoot2->val){
+            ans = isAhasB(pRoot1, pRoot2);
+        }
+        if(!ans){
+            ans = HasSubtree(pRoot1->left, pRoot2);
+        }
+        if(!ans)
+            ans = HasSubtree(pRoot1->right, pRoot2);
+        return ans;
+    }
+    bool isAhasB(TreeNode* a, TreeNode* b){
+        if(b == nullptr)
+            return true;
+        if(a == nullptr)
+            return false;
+        if(a->val != b->val)
+            return false;
+        return isAhasB(a->left, b->left) && isAhasB(a->right,b->right);
+    }
+
+37. (lc54. 螺旋矩阵) !!顺时针打印矩阵
+    vector<int> spiralOrder(vector<vector<int>>& matrix) {
+        //m, n的获取方法
+        int m = matrix.size();
+        int n = 0;
+        if(m > 0)
+            n = matrix[0].size();
+        //二维vector的声明方式，并初始化为0
+        vector<vector<int>> vis(m, vector<int>(n, 0));
+        vector<int> ans;
+        int i = 0;
+        int j = -1;//
+        int cnt = 0;
+        while(cnt < m * n){
+            //要先试探，再走
+            //否则先走，当前就可能是不满足条件了，退出循环，会越界
+            //因为是连续循环，要使得每个状态都满足条件
+            while(j + 1 < n && !vis[i][j + 1]){
+                vis[i][j + 1] = 1;
+                cnt++;
+                ans.push_back(matrix[i][++j]);
+            }
+            while(i + 1 < m && !vis[i + 1][j]){
+                vis[i + 1][j] = 1;
+                cnt++;
+                ans.push_back(matrix[++i][j]);
+            }
+            while(j - 1 >= 0 && !vis[i][j - 1]){
+                vis[i][j - 1] = 1;
+                cnt ++;
+                ans.push_back(matrix[i][--j]);
+            }
+            while(i - 1 >= 0 && !vis[i - 1][j]){
+                vis[i - 1][j] = 1;
+                cnt++;
+                ans.push_back(matrix[--i][j]);
+            }
+        }
+        return ans;
+    }
+
