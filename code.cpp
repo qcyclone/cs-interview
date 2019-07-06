@@ -598,6 +598,7 @@ public:
 };
 
 26. !!反转链表
+掉转指针
 class Solution {
 public:
     ListNode* reverseList(ListNode* head) {
@@ -889,6 +890,7 @@ class Solution {
 public:
     ListNode* mergeTwoLists(ListNode* l1, ListNode* l2) {
         //首先有个实体节点，用于最后的返回。再搞个索引
+        //因为并不知道头结点应该是L1还是L2的，相当于搞个公共的
         ListNode* ans = new ListNode(-1); 
         ListNode* p = ans;
         while(l1 != nullptr && l2 != nullptr){

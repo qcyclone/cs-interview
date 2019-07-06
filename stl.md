@@ -4,15 +4,15 @@
 >* unordered_map<int, int> mp
 >* map对应的迭代器，也是返回对应的k-v pair, it->second就是v
 `unordered_map<int, int>::iterator it`
-
 2. 插入
 //不存在k时自动创建
 mp['k'] = v 
-
 3. 查找
 判断某个key是否存在，所以存k-v的时候注意顺序
 返回迭代器
   if(mp.find(key) != mp.end() ) 
+4. 删除
+>* `size_type erase( const key_type& key );`返回删除的个数
 
 
 ## vector
@@ -21,7 +21,7 @@ mp['k'] = v
 `vector<int>::iterator it = find(vec.begin(), vec.end(), 6);`
 
 2. 声明string数组方式
->* vector<string> ansRow(numRows);
+>* `vector<string> ansRow(numRows);`
 
 3. 声明二维数组
 `vector< vector<int> > vv`
