@@ -355,11 +355,11 @@ public:
     }
 };
 
-16. 树的直径
+16. !!树的直径
 //实际就是求最大深度时，对于每个节点对左右子树的深度加和并求最大值
 class Solution {
 public:
-    int ans =0;
+    int ans = 0;
     int depth(TreeNode* node){
         if(node==NULL)
             return 0;
@@ -667,10 +667,11 @@ void adjustHeap(int *arr, int i, int len){
     arr[i] = tmp;
 }
 void sort(int *arr,int len){
+    //建堆 复杂度 O(N)
     for(int i = len/2-1; i>=0; i--){
         adjustHeap(arr, i, len);
     }
-    for(int i = len-1;i > 0; i--){
+    for(int i = len - 1;i > 0; i--){
         swap(arr[0], arr[i]);
         adjustHeap(arr, 0, i); //每次范围减小
     }
