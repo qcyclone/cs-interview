@@ -13,6 +13,7 @@ int binery_search(int a[], int len, int key){
 }
 
 1. 快速排序
+//简洁的方法
 void quick_sort(int a[], int left, int right){
     if(left > right)
         return;
@@ -43,6 +44,29 @@ int main(){
     }
     cout<<endl;
     return 0;
+}
+
+//填坑法
+void quick_sort(int arr[], int left, int right)
+{
+    if(left > right)
+        return;
+
+    int i = left, j = right, target = arr[left];
+    while (i < j)
+    {
+        while (i < j && arr[j] > target)
+            j--;
+        if (i < j)
+            arr[i++] = arr[j];
+        while (i < j && arr[i] < target)
+            i++;
+        if (i < j)
+            arr[j--] = arr[i];
+    }
+    arr[i] = target;
+    quick_sort(arr, left, i - 1);   //分割完后，都不包括分割点
+    quick_sort(arr, i + 1, right);
 }
 
 1. 归并排序
