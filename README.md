@@ -358,7 +358,7 @@ socket有哪几种
 ### Linux IO模式
 1. AIO
 2. RIO
-
+3. NIO
 ---
 
 1. 同步 

@@ -1,3 +1,80 @@
+0. 二分查找
+//左闭右开
+int binery_search(int a[], int len, int key){
+    int st = 0, ed = len;
+    while(st < ed){
+        mid = st + (ed - st) / 2;
+        if (a[mid] < key)
+            st = mid + 1;
+        else
+            ed = mid;
+    }
+    return st;
+}
+
+1. 快速排序
+void quick_sort(int a[], int left, int right){
+    if(left > right)
+        return;
+    int tmp = a[left];
+    int i = left, j = right;
+    while(i < j){
+        //顺序很重要，要先从右边开始找
+        while(a[j] >= tmp && i < j)
+            j--;
+        //要有等号，很关键
+        while(a[i] <= tmp && i < j)
+            i++;
+        if(i < j){
+            swap(a[i], a[j]);
+        }
+    }
+    swap(a[left], a[i]);
+    quick_sort(a, left, i - 1);
+    quick_sort(a, i + 1, right);
+}
+
+int main(){
+    int a[] = {0, 1 ,4,3};
+    //左闭右闭区间
+    quick_sort(a, 0, 3);
+    for(int i =0 ;i<4;i++){
+        cout<<a[i]<<" ";
+    }
+    cout<<endl;
+    return 0;
+}
+
+1. 归并排序
+//将有二个有序数列a[first...mid]和a[mid + 1...last]合并。
+void mergeArray(int a[], int first, int mid, int last, int temp[]){
+    int i = first, j = mid + 1;
+    int m = mid, n = last;
+    int k = 0;
+    while( i <= m && j <= n){
+        if(a[i] <= a[j])
+            temp[k++] = a[i++];
+        else
+            temp[k++] = a[j++];
+    }
+    while( i <= m)
+        temp[k++] = a[i++];
+    while( j <= n)
+        temp[k++] = a[j++];
+    for(int i = 0; i < k; i++){
+        a[first + i] = temp[i];
+    }
+}
+void mergeSort(int a[], int first, int last, int temp[]){
+    if(first < last){
+        int mid =  first + (last - first) / 2;
+        mergeSort(a, first, mid, temp);
+        mergeSort(a, mid + 1, last, temp);
+        mergeArray(a, first, mid, last, temp);
+    }
+}
+
+
 //BST左子树 所有 节点都比根小，右子树 所有 节点都比根大
 1.判断是否为BST
 bool isBST(node *root, int x, int y){ //判断是否为BST, 返回条件一个true，一个false
@@ -809,6 +886,64 @@ public:
         else
             return getKth(nums1,start1,nums2,start2+k/2, k - k/2);
     }                            
+};
+
+
+//O(N) 的做法
+class Solution {
+public:
+    double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2) {
+        int lena = nums1.size(), lenb = nums2.size();
+        int i = 0, j = 0;
+        int cnt = 1;
+        int ans1 = (lena + lenb + 1)/2;
+        int ans2 = (lena + lenb + 2)/2;
+        int x, y;
+        int flag = 0;
+        double ans;
+        while(i < lena && j < lenb){
+            if(nums1[i] < nums2[j]){
+                if(cnt == ans1){
+                    x = nums1[i];            
+                    flag = 1;
+                }
+                i++;
+            }else{
+                if(cnt == ans1){
+                    x = nums2[j]; 
+                    flag = 1;
+                }
+                j++;
+            }  
+            cnt++;
+            if(flag)
+                break;
+        }
+        if(flag == 0){
+            if(i == lena){
+                while(cnt++ < ans1){
+                    j++;
+                }
+                x = nums2[j++];
+            }else{
+                while(cnt++ < ans1){
+                    i++;
+                }
+                x = nums1[i++];
+            }
+        }
+        if(( lena + lenb )%2==0){
+            if(i < lena && j < lenb){
+                y = nums1[i] < nums2[j] ? nums1[i] :nums2[j];
+            }else{
+                y = i == lena? nums2[j] : nums1[i];
+            }
+            ans = (x + y)/2.0;
+        }else{
+            ans = x;
+        }
+        return ans;
+    }
 };
 
 32.最长回文子串
