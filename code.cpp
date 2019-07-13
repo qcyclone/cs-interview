@@ -342,7 +342,7 @@ public boolean isSymmetric(TreeNode root) {
     }
 return true;
 }
-10.1 二叉树的镜像，剑指
+10.1 输出一棵二叉树的镜像，剑指
 
 class Solution {
 public:
@@ -465,7 +465,7 @@ class Solution {
 public:
     int ans = 0;
     int depth(TreeNode* node){
-        if(node==NULL)
+        if(node ==  NULL)
             return 0;
         int l = depth(node->left);
         int r = depth(node->right);
@@ -699,7 +699,7 @@ public:
         }
         return l->next;
     }
-};
+}; 
 
 26. !!反转链表
 掉转指针
@@ -710,9 +710,10 @@ public:
         ListNode* cur = head;
         ListNode* tmp = NULL;
         while(cur != nullptr){
-            tmp = cur->next;
-            cur->next = pre;
-            pre = cur;
+            tmp = cur->next; //查找下一个节点
+            cur->next = pre; //反转操作
+
+            pre = cur;  //继续向后遍历
             cur = tmp;
         }
         return pre;
@@ -1167,10 +1168,12 @@ bool validateStackSequences(vector<int>& pushed, vector<int>& popped) {
     int len = pushed.size();
     //考虑好循环条件，有一个就可以
     while(i < len || j < len){
+        //如果下一个要弹出的数字是栈顶数字，直接弹出
         if(!s.empty() && s.top() == popped[j]){
             s.pop();
             j++;
         }else{
+        //不是栈顶，
             if(i >= len)
                 break;
             s.push(pushed[i]);

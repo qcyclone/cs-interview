@@ -26,6 +26,8 @@ mp['k'] = v
 3. 声明二维数组
 `vector< vector<int> > vv`
 
+4. 截取vector
+`vector<int> a(sequence.begin(), sequence.begin() + i );`
 4. **如果不声明大小，不能用下标访问**
 
 5. inserts value before pos
