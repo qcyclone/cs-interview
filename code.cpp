@@ -31,7 +31,8 @@ void quick_sort(int a[], int left, int right){
         }
     }
     swap(a[left], a[i]);
-    quick_sort(a, left, i - 1);
+    //使用了闭区间
+    quick_sort(a, left, i - 1); 
     quick_sort(a, i + 1, right);
 }
 
@@ -49,17 +50,16 @@ int main(){
 //填坑法
 void quick_sort(int arr[], int left, int right)
 {
-    if(left > right)
+    if(left >= right)
         return;
-
     int i = left, j = right, target = arr[left];
     while (i < j)
     {
-        while (i < j && arr[j] > target)
+        while (i < j && arr[j] >= target)
             j--;
         if (i < j)
             arr[i++] = arr[j];
-        while (i < j && arr[i] < target)
+        while (i < j && arr[i] <= target)
             i++;
         if (i < j)
             arr[j--] = arr[i];
@@ -92,8 +92,11 @@ void mergeArray(int a[], int first, int mid, int last, int temp[]){
 void mergeSort(int a[], int first, int last, int temp[]){
     if(first < last){
         int mid =  first + (last - first) / 2;
+        //递归左边
         mergeSort(a, first, mid, temp);
+        //递归右面
         mergeSort(a, mid + 1, last, temp);
+        //递归结束后，合并过程
         mergeArray(a, first, mid, last, temp);
     }
 }
@@ -1249,3 +1252,22 @@ public:
         return ansA && ansB;
     }
 };
+
+42. 最大子序列和
+int maxSubArray(vector<int>& nums) {
+    int len = nums.size();
+    
+    int sum = 0 ;
+    //考虑特殊情况，所有数都负
+    //注意ans赋值，有可能所有数都是负的
+    int ans = nums[0];
+    
+    for(int i = 0; i < len; i++){
+        if(sum < 0){
+            sum = 0;
+        }
+        sum += nums[i];
+        ans = max(sum, ans);
+    }
+    return ans;
+}
