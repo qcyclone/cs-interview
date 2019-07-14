@@ -49,3 +49,7 @@ reverse(v.begin(), v.end())
 
 ## queue
 1. 用front()获取头部，栈是top
+
+## set
+1. 大根堆 `multiset<int, greater<int>> s;`
+2.      `s.erase(*iterMax); s.insert(*it);`

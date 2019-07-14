@@ -30,6 +30,7 @@ void quick_sort(int a[], int left, int right){
             swap(a[i], a[j]);
         }
     }
+   //注意要和a[left]换，不能是tmp 
     swap(a[left], a[i]);
     //使用了闭区间
     quick_sort(a, left, i - 1); 
@@ -1274,3 +1275,122 @@ int maxSubArray(vector<int>& nums) {
     }
     return ans;
 }
+
+43. TOP k
+class Solution {
+public:
+    int findKthLargest(vector<int>& nums, int k) {
+        int len = nums.size();
+        
+        int st = 0, ed = len - 1;
+        int index = 0;
+        //闭区间，注意边界条件
+        while(st <= ed){
+            index = partition(nums, st, ed);
+            if(index == len - k)
+                break;
+            if(index  < len - k){
+               st = index + 1;
+            }else{
+                ed = index - 1;
+            }
+        }
+        //最后返回index
+        return nums[index];
+    } 
+    
+    int partition(vector<int>& nums, int st, int ed){
+        if(st >= ed)
+            return st;
+        int priov = nums[st];
+        int i = st, j = ed;
+        while(i < j){
+            while(i < j && nums[j] >= priov)
+                j--;
+            while(i < j && nums[i] <= priov)
+                i++;
+            if(i < j)
+                swap(nums[i], nums[j]);
+        }
+        //要和nums数组交换，不能是swap(nums[i], priov)
+        swap(nums[i], nums[st]);
+        return i;
+    }
+};
+
+44. 最小的K个数，复杂度NlogK,基于堆，红黑树
+适用于海量数据，不用都读入内存
+class Solution {
+public:
+    vector<int> GetLeastNumbers_Solution(vector<int> input, int k) {
+        vector<int> ans;
+        int len = input.size();
+        if(len < k){
+            return ans;
+        }
+        //从大到小排，根节点最大的写法
+        multiset<int, greater<int>> s;
+        multiset<int, greater<int>>::iterator iterMax;
+        
+        vector<int>:: iterator it = input.begin();
+        for(; it != input.end(); it++){
+            
+            if(int(s.size()) < k) {
+                s.insert(*it);
+            }else{
+                //s.begin()就是根节点，最大
+                iterMax = s.begin();
+                if( *it < *iterMax) {
+                    s.erase(*iterMax);
+                    s.insert(*it);
+                }
+            }
+        }
+        iterMax = s.begin();
+        for(; iterMax != s.end(); iterMax++){
+            ans.push_back(*iterMax);
+        }
+        reverse(ans.begin(), ans.end());
+        return ans;
+    }
+};
+
+45. 排序链表
+    ListNode* sortList(ListNode* head) {
+        if(head == nullptr || head->next == nullptr)
+            return head;
+        ListNode* slow = head;
+        //fast这里要更快，
+        ListNode* fast = head->next;
+        while(fast != nullptr && fast->next != nullptr){
+            slow = slow -> next;
+            fast = fast -> next -> next;
+        }
+        //因为这里是slow->next，保证其不为空
+        ListNode* right = sortList(slow->next);
+        slow -> next = nullptr;
+        ListNode* left = sortList(head); 
+        //调用合并两个有序链表
+        return merge(left, right);        
+    }
+    
+    ListNode* merge(ListNode *l1, ListNode *l2){
+        ListNode* head = new ListNode(0);
+        ListNode* p = head;
+        while(l1 != nullptr && l2 != nullptr){
+            if(l1->val < l2->val){
+                p->next = l1;
+                l1 = l1 -> next;
+            }else{
+                p->next = l2;
+                l2 = l2 -> next;
+            }
+            p = p->next;
+        }
+        if(l1 != nullptr){
+            p -> next = l1;
+        }else{
+            p -> next = l2;
+        }
+        return head->next;
+    }
