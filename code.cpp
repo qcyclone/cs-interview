@@ -1398,3 +1398,50 @@ public:
         }
         return head->next;
     }
+
+46.1 删除链表所有重复元素  中等
+ListNode* deleteDuplicates(ListNode* head) {
+    if(head == nullptr || head->next == nullptr)
+        return head;
+    ListNode* ans = new ListNode(0);
+    ans->next = head;
+    ListNode* slow = ans;
+    ListNode* fast = head;
+    int tmp = -1;
+    while(fast != nullptr && fast->next != nullptr){
+        if(fast->next->val == fast -> val){
+            tmp = fast->val;
+            while(fast != nullptr && fast->val == tmp){
+                fast = fast->next;
+            }
+            slow->next = fast;
+        }else{
+            slow = fast;
+            fast = fast->next;
+        }
+    }
+    return ans->next;
+}
+46.2
+
+  struct ListNode {
+      int val;
+      ListNode *next;
+      ListNode(int x) : val(x), next(NULL) {}
+  };
+
+class Solution {
+public:
+    ListNode* deleteDuplicates(ListNode* head) {
+        if(head == nullptr || head->next == nullptr)
+            return head;
+        ListNode* p = head;
+        while(head != nullptr && head->next != nullptr){
+            if(head->val == head->next->val){
+                head->next = head->next->next;
+            }else
+                head = head->next;
+        }
+        return p;
+    }
+};
