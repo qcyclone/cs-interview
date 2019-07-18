@@ -376,6 +376,26 @@ public:l
         return max(maxDepth(root->left), maxDepth(root->right)) + 1;
     }
 };
+16. !!树的直径
+//实际就是求最大深度时，对于每个节点对左右子树的深度加和并求最大值
+class Solution {
+public:
+    int ans = 0;
+    int depth(TreeNode* node){
+        if(node ==  NULL)
+            return 0;
+        int l = depth(node->left);
+        int r = depth(node->right);
+        ans = max(ans, l + r);
+        //在最后返回的时候，才加上当前节点的高度
+        //这里算直径是边的长度，没有加上 根节点的1 正好
+        return max(l, r) + 1;
+    }
+    int diameterOfBinaryTree(TreeNode* root) {
+        depth(root);
+        return ans;
+    }
+};
 
 12. 二叉树展开为单链表
 //顺序为 右左根，想象成一个栈的顺序
@@ -460,24 +480,7 @@ public:
     }
 };
 
-16. !!树的直径
-//实际就是求最大深度时，对于每个节点对左右子树的深度加和并求最大值
-class Solution {
-public:
-    int ans = 0;
-    int depth(TreeNode* node){
-        if(node ==  NULL)
-            return 0;
-        int l = depth(node->left);
-        int r = depth(node->right);
-        ans = max(ans, l + r);
-        return max(l, r) + 1;
-    }
-    int diameterOfBinaryTree(TreeNode* root) {
-        depth(root);
-        return ans;
-    }
-};
+
 17. min栈
 每次入栈和栈头部元素比较。
 void push(int x) {
@@ -1360,13 +1363,14 @@ public:
         if(head == nullptr || head->next == nullptr)
             return head;
         ListNode* slow = head;
-        //fast这里要更快，
+        //想象只有两个节点的情况，slow指针循环完应该指向第一个节点。
+        //所以这里fast要快
         ListNode* fast = head->next;
         while(fast != nullptr && fast->next != nullptr){
             slow = slow -> next;
             fast = fast -> next -> next;
         }
-        //因为这里是slow->next，保证其不为空
+        //为了保证断开链，先搞后半段链表
         ListNode* right = sortList(slow->next);
         slow -> next = nullptr;
         ListNode* left = sortList(head); 

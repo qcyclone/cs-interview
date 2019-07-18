@@ -22,9 +22,11 @@ mp['k'] = v
 
 2. 声明string数组方式
 >* `vector<string> ansRow(numRows);`
+>* `vector<int> tmp(10, 0) ` 声明大小并初始化为0
 
 3. 声明二维数组
-`vector< vector<int> > vv`
+`vector< vector<int> > v(m, vector<int>(n))` 
+
 
 4. 截取vector
 `vector<int> a(sequence.begin(), sequence.begin() + i );`
@@ -53,3 +55,8 @@ reverse(v.begin(), v.end())
 ## set
 1. 大根堆 `multiset<int, greater<int>> s;`
 2.      `s.erase(*iterMax); s.insert(*it);`
+
+## C++动态声明数组
+1.  `int* a = new int[length]`  声明时不能用 [], 要用指针形式
+    `delete[] a`
+    
