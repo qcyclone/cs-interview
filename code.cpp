@@ -1424,11 +1424,11 @@ ListNode* deleteDuplicates(ListNode* head) {
 }
 46.2
 
-  struct ListNode {
-      int val;
-      ListNode *next;
-      ListNode(int x) : val(x), next(NULL) {}
-  };
+struct ListNode {
+    int val;
+    ListNode *next;
+    ListNode(int x) : val(x), next(NULL) {}
+};
 
 class Solution {
 public:
