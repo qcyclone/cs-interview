@@ -53,8 +53,17 @@ reverse(v.begin(), v.end())
 1. 用front()获取头部，栈是top
 
 ## set
-1. 大根堆 `multiset<int, greater<int>> s;`
+1. ？？大根堆 `multiset<int, greater<int>> s;`
 2.      `s.erase(*iterMax); s.insert(*it);`
+
+## priority_queue 可看成是大根堆，内部基于堆实现
+0. 默认 队首 元素是最大的
+1. priority_queue <int,vector<int>,greater<int> > q; //头部元素最小
+2. 除此可用make_heap(), 来在vector基础上创建堆，这样建堆的复杂度是O(N)
+
+## list 双向链表
+1. list::splice实现list拼接的功能。将源list的内容部分或全部元素删除，拼插入到目的list。
+`l.splice(l.begin(), l, it->second())` 将it插入到头部
 
 ## C++动态声明数组
 1.  `int* a = new int[length]`  声明时不能用 [], 要用指针形式

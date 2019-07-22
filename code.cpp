@@ -1445,3 +1445,45 @@ public:
         return p;
     }
 };
+
+47. LRU 
+
+/******
+//定义三个private数据，LRU尺寸，LRU pair<key,value>, LRU map<key,iterator of pair>
+
+//利用splice操作erase,makepair 等完成LRUcache
+
+//put()
+1. 如果m中有对应的key,value,那么移除l中的key,value
+2. 如果m中没有，而size又==cap，那么移除l最后一个key，value，并移除m中对应的key，iterator
+3. 在l的开头插入key，value，然后m[key]=l.begin();
+
+****/
+class LRUCache {
+public:
+    LRUCache(int capacity){
+        cap=capacity;
+    }
+    int get(int key){
+        unordered_map<int,list<pair<int,int>>::iterator>::iterator it=m.find(key);
+        if(it==m.end()) return -1;
+        l.splice(l.begin(),l,it->second);//插入到list 头部
+        return it->second->second;
+    }
+    void put(int key,int value){
+        auto it=m.find(key);
+        if(it!=m.end()) l.erase(it->second);
+        if(l.size()==cap){
+            int k=l.rbegin()->first;
+            l.pop_back();
+            m.erase(k);//map可以根据key值和迭代器值移除，查找
+        }
+        l.push_front(make_pair(key,value));
+        m[key]=l.begin();
+    }
+private:
+    int cap;//LRU size
+    list<pair<int,int>>l;//pair<key,value>
+    unordered_map<int,list<pair<int,int>>::iterator>m;//unordered_map<key,key&value's pair iterator>
+};
+
