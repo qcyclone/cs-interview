@@ -64,8 +64,22 @@ reverse(v.begin(), v.end())
 ## list 双向链表
 1. list::splice实现list拼接的功能。将源list的内容部分或全部元素删除，拼插入到目的list。
 `l.splice(l.begin(), l, it->second())` 将it插入到头部
-
+2. 
 ## C++动态声明数组
 1.  `int* a = new int[length]`  声明时不能用 [], 要用指针形式
     `delete[] a`
     
+## 迭代器失效 
+1. 慎用erase()， 返回删除元素下一个位置 
+  * 关联容器： list、set、map遍历删除元素时
+  * 序列式容器： vector、deque遍历删除元素也可使用这种方式
+2. 对于序列式容器(如vector,deque)，删除当前的iterator会使后面所有元素的iterator都失效。这是因为vetor,deque使用了连续分配的内存，删除一个元素导致后面所有的元素会向前移动一个位置。还好erase方法可以返回下一个有效的iterator。
+`std::list< int> List;`
+`std::list< int>::iterator itList;`
+`for( itList = List.begin(); itList != List.end(); )`
+`{`
+`      if( WillDelete( *itList) )`
+`            itList = List.erase( itList);`
+`       else`
+`            itList++;`
+`}`

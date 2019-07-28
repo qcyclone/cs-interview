@@ -359,14 +359,47 @@ public:
 };
 
 11. 树的最小/最大 深度
+
+非递归-->层次遍历
+public static int minDeep(BTNode node) {
+        //如果为空
+        if(node == null){
+            return 0;
+        }
+        int minDeep = 0, width;
+        ArrayDeque<BTNode> queue = new ArrayDeque<>();
+        //根节点入队
+        queue.add(node);
+        while (!queue.isEmpty()) {
+            width = queue.size();
+            //若每一层的宽度大于maxWidth，则重新赋值
+            minDeep += 1;
+            //注意这里循环的次数是width,出队的仅仅是每一层的元素
+            for (int i = 0; i < width; i++) {
+                BTNode nodeTemp = queue.poll();
+                //左右均为空表明是叶子结点
+                //如果是最小，就多了这一句。及时返回
+                if(nodeTemp.rightChild == null && nodeTemp.leftChild == null){
+                    return minDeep;
+                }
+                if (nodeTemp.leftChild != null) {
+                    queue.add(nodeTemp.leftChild);
+                }
+                if(nodeTemp.rightChild != null) {
+                    queue.add(nodeTemp.rightChild);
+                }
+            }
+        }
+        return minDeep;
+    }
 public:
 int minDepth(TreeNode* root) {
     if(root==NULL)  return 0;
-    int l = minDepth(root->left) + 1;
-    int r = minDepth(root->right) + 1;
-    if(l==1 || r==1) //如果有一侧没有子树，则高度为另一侧
-        return max(l,r);
-    return min(l,r);
+    int l = minDepth(root->left);
+    int r = minDepth(root->right);
+    if(l == 0||r == 0) //如果有一侧没有子树，则高度为另一侧
+        return max(l,r) + 1;
+    return min(l,r) + 1;
 }
 class Solution {
 public:l
@@ -1460,30 +1493,42 @@ public:
 
 ****/
 class LRUCache {
+private:
+    int cap;//LRU size
+    list<pair<int,int>> l;//pair<key,value>
+    unordered_map<int,list<pair<int,int>>::iterator> m;
+    //unordered_map<key,key&value's pair iterator>
+};
 public:
     LRUCache(int capacity){
-        cap=capacity;
+        cap = capacity;
     }
     int get(int key){
-        unordered_map<int,list<pair<int,int>>::iterator>::iterator it=m.find(key);
-        if(it==m.end()) return -1;
-        l.splice(l.begin(),l,it->second);//插入到list 头部
-        return it->second->second;
+        auto it = m.find(key);
+        if(it == m.end()) 
+            return -1;
+        pair<int, int> kv = *map[key];
+        l.erase(map[key]);
+        l.push_front(kv);
+        map[key] = l.begin();
+      //  l.splice(l.begin(), l, it->second);//插入到list 头部
+        return kv->second;
     }
     void put(int key,int value){
         auto it=m.find(key);
-        if(it!=m.end()) l.erase(it->second);
-        if(l.size()==cap){
-            int k=l.rbegin()->first;
-            l.pop_back();
-            m.erase(k);//map可以根据key值和迭代器值移除，查找
+        if(it != m.end()){
+            l.erase(it->second);
+            l.push_front(make_pair(key,value));
+            m[key] = l.begin();
+        } else {
+            if(l.size()==cap){
+                //当删除节点时，要能取得最后一个k，所以链表中要存储k-v
+                int k = l.rbegin()->first;
+                l.pop_back();
+                m.erase(k);//map可以根据key值和迭代器值移除，查找
+            }
+            l.push_front(make_pair(key,value));
+            m[key] = l.begin();
         }
-        l.push_front(make_pair(key,value));
-        m[key]=l.begin();
     }
-private:
-    int cap;//LRU size
-    list<pair<int,int>>l;//pair<key,value>
-    unordered_map<int,list<pair<int,int>>::iterator>m;//unordered_map<key,key&value's pair iterator>
-};
 
