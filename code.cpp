@@ -1532,3 +1532,59 @@ public:
         }
     }
 
+48. 实现memcpy
+https://zhuanlan.zhihu.com/p/70873246
+覆盖有两种情况，
+其中1种一定要从后向前复制
+另一种一定要从前向后
+void* memcpy(void *dst, const void *src, int len){
+    if(dst==nullptr || src == nullptr)
+        return null;
+    char *psrc = (char*)src;
+    char *pdst = (char*)dst;
+    if(psrc < pdst && psrc + size > pdst){
+        psrc = psrc + len -1;
+        pdst = pdst + len - 1;
+        while(len--){
+            *pdst-- = *psrc--;
+        }
+    }else{
+        while(len--){
+            *pdst++ = *psrc++;
+        }
+    }
+    return dst;
+}
+
+49. 单例模式
+利用static局部变量
+1. 懒汉式
+//用到了才初始化，延迟初始化
+class Singleton{
+public:
+    //返回静态的引用
+    static Singleton& getInstance(){
+        //局部静态变量
+        static Singleton m_instance;
+        return m_instance;
+    }  
+private:
+    Singleton();
+    Singleton(const Single& other);
+}
+2. 饿汉式，程序运行时立即初始化。
+初始化了一直没有被使用，拿不到资源，导致饥饿
+class Singleton{
+public:
+    static Singleton& getInstance(){
+        return instance;
+    }
+private:
+	static Singleton instance;
+	Singleton();
+	~Singleton();
+	Singleton(const Singleton&);
+	Singleton& operator=(const Singleton&);    
+}
+//初始化
+Singleton Singleton::instance;
