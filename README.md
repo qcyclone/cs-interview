@@ -525,9 +525,18 @@ https://zhuanlan.zhihu.com/p/43933717
     * ps -ef 能把启动的命令显示全
 2. 查看cpu负载均衡
     * top，w，uptime
-3. awk
-4. sed
-5. grep
+3. awk 对数据分析并生成报告
+    1. 统计词频，并排序
+    * awk '{for(i=1;i<=NF;i++) num[$i]++}END{for(k in num) print k, num[k]}' words.txt | sort -nr -k 2
+    2. 转置文件
+    * awk '{for(i=1;i<=NF;i++) if(NR==1){res[i]=$i}else{res[i]=res[i]" "$i} } \
+END{for(i=1;i<=NF;i++) print res[i]}' file.txt
+
+4. sed 编辑，并不改变文件内容。逐行处理
+    * sed 's/test/mytest/g' example
+5. grep 查找
+    1. 有效电话号码，注意括号要转义
+    * grep -P "^(\(\d{3}\)\s|\d{3}-)\d{3}-\d{4}$" file.txt
 
 
 # 数据库
@@ -576,7 +585,28 @@ m阶B+树，xx个关键字，xx个指针
 2. 只有很少数据值的列 （比如性别）
 3. 当增加索引时，会提高检索性能，但是会降低修改性能。因此，当修改性能远远大于检索性能时，不应该创建索引。
 ---
+
 # SQL语句
+* left join 左连接查询，主要返回左表信息。再加上on的字段
+* join 就是只返回存在关联关系的结果
+
+1. 从一张用户信息表中统计出年龄最大的10个人（limit+order by）
+    select person
+    from xxx
+    order by age desc
+    limit 10
+2. 查找第二高的薪水
+    select
+    (select distinct salary
+    from employee
+    order by salary desc
+    limit 1 offset 1)
+    as SecondHighestSalary
+3. 查找薪水小于1000的员工
+    select e.name, b.bonus
+    from employee e left join bonus b
+    on e.empid=b.empid
+    where bonus < 1000 or bonus is null
 
 
 # Linux
