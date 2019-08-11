@@ -1588,3 +1588,34 @@ private:
 }
 //初始化
 Singleton Singleton::instance;
+
+50. 验证UTF8
+
+class Solution {
+public:
+    bool validUtf8(vector<int>& data) {
+        int n = data.size();
+        for(int i = 0; i < n; i++){
+            int ans = 0; 
+            //找前缀1个数
+            for(int j = 7;j >= 0; j--){
+                //注意这里是data移动。如果是1移动要判断是否等于128，而不是，这样比较麻烦
+                if((data[i] >> j) & 1)
+                    ans++;
+                else
+                    break;
+            }
+            if(ans == 0)
+                continue;
+            if(ans == 1|| ans > 4 || i + ans > n)
+                return false;
+            for(int j = 1; j < ans; j++){
+                if((data[i + j] >>6) !=2)
+                    return false;
+            }
+            //ans个前缀1，只向后找了ans-1
+            i += ans - 1 ;
+        }
+        return true;
+    }
+};
