@@ -18,6 +18,7 @@ void quick_sort(int a[], int left, int right){
     if(left > right)
         return;
     int tmp = a[left];
+    //左闭右闭区间
     int i = left, j = right;
     while(i < j){
         //顺序很重要，要先从右边开始找
@@ -38,7 +39,7 @@ void quick_sort(int a[], int left, int right){
 }
 
 int main(){
-    int a[] = {0, 1 ,4,3};
+    int a[] = {0, 1, 4, 3};
     //左闭右闭区间
     quick_sort(a, 0, 3);
     for(int i =0 ;i<4;i++){
@@ -73,6 +74,7 @@ void quick_sort(int arr[], int left, int right)
 1. 归并排序
 //将有二个有序数列a[first...mid]和a[mid + 1...last]合并。
 void mergeArray(int a[], int first, int mid, int last, int temp[]){
+    //左闭右闭区间
     int i = first, j = mid + 1;
     int m = mid, n = last;
     int k = 0;
@@ -91,15 +93,15 @@ void mergeArray(int a[], int first, int mid, int last, int temp[]){
     }
 }
 void mergeSort(int a[], int first, int last, int temp[]){
-    if(first < last){
-        int mid =  first + (last - first) / 2;
-        //递归左边
-        mergeSort(a, first, mid, temp);
-        //递归右面
-        mergeSort(a, mid + 1, last, temp);
-        //递归结束后，合并过程
-        mergeArray(a, first, mid, last, temp);
-    }
+    if(first >= last)
+        return;
+    int mid =  first + (last - first) / 2;
+    //递归左边
+    mergeSort(a, first, mid, temp);
+    //递归右面
+    mergeSort(a, mid + 1, last, temp);
+    //递归结束后，合并过程
+    mergeArray(a, first, mid, last, temp);
 }
 
 
@@ -114,32 +116,18 @@ bool isBST(node *root, int x, int y){ //判断是否为BST, 返回条件一个tr
     return isBST(root.l, x, root.val) &&  isBST(root.r, root.val, y);
 }
 
-int pre;
+int pre = INT_MIN;
 bool isBST(node *root){ //递归中序遍历，没有临时数组
     if(root == null)
         return true;
-    if(! isBST(root->left)) return false;
-    if(root->val > m)
-        m= root->val;
+    if(! isBST(root->left)) 
+        return false;
+    if(root->val > pre)
+        pre = root->val;
     else
         return false;
-    if(! isBST(root->right))    return false;
-    return  ture; //如果上面判断都没生效，最后执行这句
+    return isBST(root->right); //如果上面判断都没生效，最后执行这句
 }
-
-long long pre = -1e10;
-bool isValidBST(TreeNode* root) {
-    if(root==NULL)  return true;
-    bool l_res = isValidBST(root->left);
-    if(l_res==false)   //看左边是否符合条件
-        return false;
-    // if(!isValidBST(root->left))
-    //     return false;
-    if(root->val <= pre)  return false;//看跟是否符合条件
-    pre=root->val;
-    return isValidBST(root->right);//看右侧是否符合条件
-}
-};
 
 2. 非递归中序遍历
 vector<int> inorderTraversal(TreeNode* root) { //非递归
@@ -167,7 +155,25 @@ void inOrder(node* root){ //递归
     res.push_back(root->val);
     inOrder(root.right);
 }
+
 4.非递归先序遍历
+void preOrder(node* root){
+    vector<int> ans;
+    //if(root == NULL)    return ans;
+    stack<TreeNode*> s;
+    while(root!= NULL || !s.empty()){  // 左根右，先一直往左，再访问根和右
+        while(root!=NULL){
+            cout<<root->val<<endl;
+            s.push(root);
+            root=root->left;
+        }
+        root = s.top();
+        s.pop();
+        root = root->right;
+    }
+    return ans;
+}
+
 void preOrder(node* root) {//非递归
     stack<int> s;
     s.push(root);
@@ -177,6 +183,31 @@ void preOrder(node* root) {//非递归
         ans.push_back(node.val);
         s.push(node.right);
         s.push(node.left);
+    }
+}
+
+4.2 非递归后序遍历
+void backOrder(TreeNode* root){
+    stack<TreeNode*> s;
+    TreeNode* last = null;
+    while(root != null || !s.empty()){
+        while(root != null){
+            s.push(root);
+            root = root->left;
+        }
+        root = s.top();
+        //最后访问根节点，条件是右为空或右已访问过
+        if(root->right==null || root->right == last){
+            cout<<root->val<<endl;
+            s.pop();
+            // 记录上一个访问的节点
+            // 用于判断“访问根节点之前，右子树是否已访问过”
+            last = root;
+            // 表示不需要转向，继续弹栈
+            root = null;
+        } else {//存在右节点且没访问过
+            root = root->right;
+        }
     }
 }
 
@@ -1619,3 +1650,5 @@ public:
         return true;
     }
 };
+
+51. 大数加法
