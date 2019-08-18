@@ -23,10 +23,10 @@ mp['k'] = v
 2. 声明string数组方式
 >* `vector<string> ansRow(numRows);`
 >* `vector<int> tmp(10, 0) ` 声明大小并初始化为0
-
+>* `v.resize(n, 4)` //通过resize可根据输入声明全局数组，并初始化
+>* `v.reserve(10)` // 只能传入1个参数，指定capacity
 3. 声明二维数组
 `vector< vector<int> > v(m, vector<int>(n))` 
-
 
 4. 截取vector
 `vector<int> a(sequence.begin(), sequence.begin() + i );`
