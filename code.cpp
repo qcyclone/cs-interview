@@ -1603,6 +1603,7 @@ private:
     Singleton();
     Singleton(const Single& other);
 }
+
 2. 饿汉式，程序运行时立即初始化。
 初始化了一直没有被使用，拿不到资源，导致饥饿
 class Singleton{
