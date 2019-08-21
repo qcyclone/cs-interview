@@ -1655,3 +1655,11 @@ public:
 };
 
 51. 大数加法
+
+52. 蓄水池抽样
+Init : a reservoir with the size： k  
+for i= k+1 to N  
+    M=random(1, i);  
+    if( M < k)  
+     SWAP the Mth value and ith value  
+end for   
