@@ -1588,6 +1588,8 @@ void* memcpy(void *dst, const void *src, int len){
 }
 
 49. 单例模式
+使用类的私有静态指针变量指向类的唯一实例，
+并用一个公有静态方法获取该实例
 利用static局部变量
 1. 懒汉式
 //用到了才初始化，延迟初始化
@@ -1595,7 +1597,7 @@ class Singleton{
 public:
     //返回静态的引用
     static Singleton& getInstance(){
-        //局部静态变量
+        //局部静态变量,只会在第一次调用时被初始化
         static Singleton m_instance;
         return m_instance;
     }  
@@ -1618,7 +1620,7 @@ private:
 	Singleton(const Singleton&);
 	Singleton& operator=(const Singleton&);    
 }
-//初始化
+//初始化，加了这句才做到初始化
 Singleton Singleton::instance;
 
 50. 验证UTF8
