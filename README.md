@@ -905,7 +905,7 @@ mmap缺点？
 4. 信号量（semaphore）:用于进程间或线程间的同步手段。
 5. 共享内存
 6. 消息队列
-7。 socket： 用于不同机器间的通信
+7. socket： 用于不同机器间的通信
 
 
 * https://www.jianshu.com/p/c1015f5ffa74
