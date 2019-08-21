@@ -238,6 +238,9 @@ vector<int>::iterator it;
 定义一个类来封装资源的分配和释放，构造析构由编译器自动调用。
 * auto_ptr问题：调用拷贝构造和赋值运算符重载函数时，将一块空间的权限完全交给别人。
 1. shared_ptr，是引用计数的智能指针。可以有多个指针指向同一块内存，底层用引用计数的方式实现，即每增加一个指针，该内存的引用计数+1，减少一个指针，内存引用计数-1，当为0的时候，内存就会被析构函数销毁。
+    * 它的引用计数本身是安全且无锁的，但对象的读写则不是；shared_ptr 对象本身的线程安全级别，不是它管理的对象的线程安全级别。
+    * 循环依赖问题：http://senlinzhan.github.io/2015/04/24/%E6%B7%B1%E5%85%A5shared-ptr/
+
 2. unique_ptr，对象里存放的内容在整个程序中只能出现一次
 3. weak_ptr，指向一个shared_ptr管理的对象。不控制所指向对象的生存期。引用计数会带来循环引用产生无法删除的情况，导致内存泄漏。可使用weak_ptr，弱引用只引用但不增加或删减计数。如果一块内存被shared_ptr和weak_ptr同时引用，当所有的shared_ptr析构了之后，不管有没有weak_ptr引用该内存，内存会被释放。 
 ---
@@ -588,7 +591,7 @@ https://zhuanlan.zhihu.com/p/43933717
     * top，w，uptime
 3. awk 对数据分析并生成报告
     1. 统计词频，并排序
-    * awk '{for(i=1;i<=NF;i++) num[$i]++}END{for(k in num) print k, num[k]}' words.txt | sort -nr -k 2
+    * awk '{for(i=1;i<=NF;i++) num[$i]++} END{for(k in num) print k, num[k]}' words.txt | sort -nr -k 2
     2. 转置文件
     * awk '{for(i=1;i<=NF;i++) if(NR==1){res[i]=$i}else{res[i]=res[i]" "$i} } \
 END{for(i=1;i<=NF;i++) print res[i]}' file.txt
@@ -598,6 +601,9 @@ END{for(i=1;i<=NF;i++) print res[i]}' file.txt
 5. grep 查找
     1. 有效电话号码，注意括号要转义
     * grep -P "^(\(\d{3}\)\s|\d{3}-)\d{3}-\d{4}$" file.txt
+6. 查看端口号
+    1. netstat -aon
+    2. lsof -i:端口号
 
 
 # 数据库
@@ -841,8 +847,13 @@ MPI优点：
 2. TKE架构图，各个组件
 3. 如何调度？调度器策略？抢占式调度？
 4. 调度时资源如何计算的，最小最多资源？
+5. 解决bug：监控ectd指标失效。问了其他负责人，有个token模块被改掉了，把错误信息官网查。发现认证有问题，单独搞了个对ectd的证书认证。调试时候编辑deplyment，sleep，手动进入pod里面调试，挂载证书验证，测试使用证书是否成功。通过hostPath形式对证书挂载，修改代码。该了容忍，和新亲和性，调度其到master节点，etcd是部署在master节点上的。
+6. 控制器多线程访问时，多个同时删除怎么处理？
+* 加锁，多某个资源加锁
+
 ### PBS
 1. PBS架构，如何工作的
+pbs_schedu, pbs_server, pbs_mom
 2. 调度器策略，
 3. 如何监控进程
 4. 亲和性

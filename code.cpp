@@ -467,7 +467,7 @@ class Solution {
 public:
     TreeNode* pre=NULL;
     void flatten(TreeNode* root) {
-        if(root==NULL)
+        if(root == NULL)
             return ;
         flatten(root->right);
         flatten(root->left);
@@ -477,7 +477,7 @@ public:
     }
 };
 
-13. 有序链表 --> BST，快慢指针
+13. 有序链表 --> BST（avl），快慢指针
 
     TreeNode* sortedListToBST(ListNode* head) {
         return my(head,nullptr);
