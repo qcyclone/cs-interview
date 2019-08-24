@@ -41,6 +41,9 @@ reverse(v.begin(), v.end())
 7. 截取
 >* `vector<int> a(v.begin(), v.begin() + 4)`  
 //截取前4个数
+8. 释放内存
+`vector<int>().swap(v)`
+* swap()是交换函数，使vector离开其自身的作用域，从而强制释放vector所占的内存空间
 
 ## string
 1. 返回长度
