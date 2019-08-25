@@ -951,6 +951,8 @@ public:
 !!! size_type v.size() 无符号，如果空的v, 
 num1.size() - 1会返回一个极大的数，溢出
 
+相当于对k二分，直到k为1
+
 class Solution {
 public:
     double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2){
@@ -968,16 +970,16 @@ public:
         if(start1 > lena - 1){
             return nums2[start2 + k - 1];
         }
-        if(start2 > nums2.size() - 1){
+        if(start2 > lenb - 1){
             return nums1[start1+k-1];
         }
         if(k==1)
             return min(nums1[start1],nums2[start2]);
-        int nums1Mid = start1 + k/2 - 1 < nums1.size()?nums1[start1+k/2-1]:INT_MAX;
-        int nums2Mid = start2 + k/2 - 1 < nums2.size()?nums2[start2+k/2-1]:INT_MAX;
-    //哪个数组的中间值小，就在哪里找。当越界后，标记为最大，保证不会在这里面找        
+        //哪个数组的中间值小，就把哪个数组的start向后移动。当越界后，标记为最大，保证不会移动这个越界的数组  
+        int nums1Mid = start1 + k/2 - 1 < lena ? nums1[start1+k/2-1]:INT_MAX;
+        int nums2Mid = start2 + k/2 - 1 < lenb ? nums2[start2+k/2-1]:INT_MAX;
+        //哪个数组的前半部分小，就把前半部分干掉，最终答案不可能出现在这个里面，同时k范围折半       
         if(nums1Mid <nums2Mid)
-        //每次把范围大小折半，min(m,n)?
             return getKth(nums1,start1+k/2,nums2,start2,k - k/2);
         else
             return getKth(nums1,start1,nums2,start2+k/2, k - k/2);
@@ -1695,5 +1697,67 @@ public:
         if(cn > nums.size()/3 )
             res.push_back(n);
         return res;
+    }
+};
+
+54. lc378 有序矩阵中第k小的元素
+log(MAX-MIN)*N
+class Solution {
+public:
+    int kthSmallest(vector<vector<int>>& matrix, int k) {
+        int n = matrix.size();
+        int m = matrix[0].size();
+        int left = matrix[0][0];
+        int right = matrix[n-1][m-1];
+        while(left < right){
+            int mid = left + (right - left)/2;
+            int count = gao(matrix, n, m, mid);//比mid小的个数，即mid为第conut小的数
+            if(count < k)
+                left = mid + 1;
+            else
+                right = mid;
+        }
+        return left;
+    }
+    int gao(vector<vector<int>>& matrix, int n, int m, int mid){
+        int count = 0;
+        int i = n -1;
+        int j = 0 ;
+        while(i >= 0 && j < m){
+            if(matrix[i][j] > mid)
+                i--;
+            else{
+                count += i + 1;
+                j++;
+            }
+        }
+        return count;            
+    }
+};   
+
+55. 打乱数组
+原数组是已排序的
+class Solution {
+private:
+    vector<int> nums;
+public:
+    Solution(vector<int>& nums) {
+        this -> nums = nums;
+    }
+    
+    /** Resets the array to its original configuration and return it. */
+    vector<int> reset() {
+        return nums;
+    }
+    
+    /** Returns a random shuffling of the array. */
+    //就是把数组分为以打乱和未打乱两部分，
+    vector<int> shuffle() {
+        vector<int> ans(nums);
+        for(int i = ans.size() - 1; i >=0 ;i--){
+            int j = rand()%(i+1);
+            swap(ans[i], ans[j]);
+        }
+        return ans;
     }
 };
