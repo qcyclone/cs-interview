@@ -1761,3 +1761,64 @@ public:
         return ans;
     }
 };
+
+56. 四种强制类型转换场景
+int main(){
+//reinterpret_cast 用法
+    int a = 0x1234;
+    //char b = *(char*)&a;
+    char b = *reinterpret_cast<char*>(&a);
+//    printf("%x\n", b);
+
+//const_cast 改变底层const，指向的对象是const,会有未定义的行为(C++没有明确规定，由编译器处理)
+    int constant = 21;
+    const int* cp = &constant;
+    //*cp = 10; 是错误的
+    int* modifier = const_cast<int*>(cp);
+    *modifier = 8;
+//    cout<<*modifier<<endl;
+//    cout<<*cp<<endl;
+//    //如果对象是一个常量，不会改变constant值，执行写会产生未
+//    cout<<constant<<endl;
+
+    const int cc = 21;
+    int *modi = const_cast<int*>(&cc);
+    *modi = 10;
+  //  cout<<cc<<endl;
+//    可用在函数参数的转换上
+//    const int c = 20;
+//    Printer(const_cast<int*>(&c));
+    int const_a = 10;
+    int *j = &const_a;
+    const int* k = const_cast<const int*>(j);
+    //const int* k = j; 加const属性很少用，因为可以直接把赋值给const指针
+
+    const int *cj = &const_a;
+    int * moer = (int*)cj; //C++的指针转换时任意的，不会检查类型，可用这种形式替代
+    *moer = 10;
+    cout<<*moer<<endl;
+    cout<<*cj<<endl;
+    cout<<const_a<<endl;
+    
+//static_cast 只要不包含底层const，都可以用。void*和其他类型指针的转换
+    int static_j = 11;
+    double slope = static_cast<double>(static_j)/2;
+    cout<<slope<<endl;
+
+//dynamic_cast 一般用于含有虚函数的下行转换
+
+//    if( Derived *dp = dynamic_cast<Derived*>(bp)){
+//        dp指向了子类
+//    }else{
+//        转换失败，bp指向了父类
+//    }
+    return 0;
+}
+
+void f(const Base &b){
+    try {
+        const Derived &d = dynamic_cast<const Derived&>(b);
+    } catch (bad_cast) {
+        
+    }
+}
