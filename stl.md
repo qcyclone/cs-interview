@@ -5,9 +5,11 @@
 >* map对应的迭代器，也是返回对应的k-v pair, it->second就是v
 `unordered_map<int, int>::iterator it`
 2. 插入
+* 每个节点存储了k-v
 //不存在k时自动创建
 mp['k'] = v 
-3. 查找
+3. 查找， 
+* 是根据key进行排序的
 判断某个key是否存在，所以存k-v的时候注意顺序
 返回迭代器
   if(mp.find(key) != mp.end() ) 
