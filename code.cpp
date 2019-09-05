@@ -1874,5 +1874,42 @@ int main() {
 58. 智能指针
 1. shared_ptr
 //make_shared会根据传递的参数调用动态对象的构造函数
-shared_ptr<int> p1 = make_shared<int>(1);
-shared_prt<int> p2(new int(2));
+shared_ptr<int> p1 = make_shared<int>(10);
+//默认是空指针
+shared_ptr<int> p2;
+//拷贝
+shared_ptr<int> p3(p1);
+
+59. 重复数字
+lc.287
+class Solution {
+public:
+    int findDuplicate(vector<int>& nums) {
+        int len = nums.size();
+        int l = 1, r = len - 1;
+        int mid;
+        // 左闭右闭区间，就是有等号
+        while(l <= r){
+            mid = (l + r) / 2;
+            int count = range(nums, l, mid);
+            if(l==r){
+                // 如果是肯定有重复数字，当相等时，就肯定是重复的
+                // if(count > 1)
+                return l;
+            }
+            if(count > mid - l + 1)// 如果大于，就是在当前的区间。
+                r = mid;
+            else // 如果小于等于，肯定不在当前区间里
+                l = mid + 1;
+        }
+        return l;
+    }
+    int range(vector<int>& nums, int start, int end){
+        int ans = 0 ;
+        for(int i=0;i<nums.size();i ++){
+            if(nums[i]>=start && nums[i] <= end)
+                ans++;
+        }
+        return ans;
+    }
+};
