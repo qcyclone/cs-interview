@@ -1597,7 +1597,7 @@ void* memcpy(void *dst, const void *src, int len){
 //用到了才初始化，延迟初始化
 class Singleton{
 public:
-    //返回静态的引用
+    //静态成员函数只能没有this指针，只能使用static成员
     static Singleton& getInstance(){
         //局部静态变量,只会在第一次调用时被初始化
         static Singleton m_instance;
@@ -1606,7 +1606,10 @@ public:
 private:
     Singleton();
     Singleton(const Single& other);
+    Singleton& operator=(const Singleton&);   
 }
+
+auto i = Singleton::getInstance();
 
 2. 饿汉式，程序运行时立即初始化。
 初始化了一直没有被使用，拿不到资源，导致饥饿
@@ -1822,3 +1825,54 @@ void f(const Base &b){
         
     }
 }
+
+57. 单调栈维护一个区间的最小值
+链接：https://www.nowcoder.com/questionTerminal/3f4867e9cbe54403ac5df55b8e678df9?orderByHotValue=0&page=20&onlyReference=false
+来源：牛客网
+
+#include
+#include
+#include
+using namespace std;
+ 
+int findMax(vector v) {
+    int len = v.size(), res = 0;
+    vector sum(len + 1, 0);
+    for (int i = 1; i <= len; ++i) sum[i] = sum[i-1] + v[i-1];
+    stack s;
+    for (int i = 0; i < len; ++i) {
+        while (!s.empty() && v[i] < v[s.top()]) {
+            int index = s.top(), left, right = i;
+            s.pop();
+            if (s.empty()) left = 0;
+            else left = s.top() + 1;
+            // cout << v[index] * (sum[right] - sum[left]) << endl;
+            res = max(res, v[index] * (sum[right] - sum[left]));
+        }
+        s.push(i);
+    }
+    while(!s.empty()) {
+        int index = s.top(), left, right = len;
+        s.pop();
+        if (s.empty()) left = 0;
+        else left = s.top() + 1;
+        // cout << v[index] * (sum[right] - sum[left]) << endl;
+        res = max(res, v[index] * (sum[right] - sum[left]));
+    }
+    return res;
+}
+ 
+int main() {
+    // vector v{6,2,5,5,5,4,7};
+    int n;
+    cin >> n;
+    vector v(n);
+    for (int i = 0; i < n; ++i) scanf("%d", &v[i]);
+    cout << findMax(v) << endl;
+}
+
+58. 智能指针
+1. shared_ptr
+//make_shared会根据传递的参数调用动态对象的构造函数
+shared_ptr<int> p1 = make_shared<int>(1);
+shared_prt<int> p2(new int(2));
