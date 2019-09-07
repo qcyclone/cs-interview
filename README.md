@@ -871,7 +871,9 @@ https://github.com/julycoding/The-Art-Of-Programming-By-July/blob/master/ebook/z
 * 注意一个表只能有一个聚集索引，但是可以由多个非聚集索引。
 
 ### 不同引擎区别?
-1. innodb存储引擎：（聚集索引，数据文件本身就是主索引）
+* https://blog.csdn.net/voidccc/article/details/40077329
+1. innodb存储引擎：（数据存储方式是：聚集索引，数据文件本身就是主索引）
+    1. 在存储实现上，非叶节点和叶节点结构不一样，因为叶节点直接存储了数据，而不是指针
     * 支持事务、有表锁和行锁、外键。 行级锁大幅度提高多用户并发操作的性能。大量Insert和Update是性能更高。
     1. 是聚集索引（叶子节点存储数据，决定物理存储顺序）。数据文件是和索引绑在一起的，必须要有主键，通过主键索引效率很高。
     2. 存储是只有1个表空间数据文件，一个日志文件
@@ -918,6 +920,13 @@ https://github.com/julycoding/The-Art-Of-Programming-By-July/blob/master/ebook/z
 3. 可重复读（Repeatable Read）： 在同一个事务里，SELECT的结果是事务开始时间点的状态，同样的SELECT操作读到的结果会是一致的。但是，会有幻读现象。
 （MySQL的默认隔离级别）
 4. 串行化  （Serializable）：所有事务只能串行执行
+
+### 实现事务的技术
+1. 日志文件(redo log 和 undo log),重做日志
+    * redo log: 重做日志记录数据被修改后的信息; redo log是用来恢复数据的 用于保障，已提交事务的持久化特性
+    * undo log: 回滚日志，用于记录数据被修改前的信息; undo log是用来回滚数据的用于保障 未提交事务的原子性
+2. 锁
+3. MVCC(MultiVersion Concurrency Control) 叫做多版本并发控制。
 
 ### 数据库中的锁
 1. 共享锁（读锁，S锁），select时加
@@ -1227,6 +1236,9 @@ MPI优点：
         2. 封解包的过程，Varint 是一种紧凑的表示数字的方法。它用一个或多个字节来表示一个数字，值越小的数字使用越少的字节数。这能减少用来表示数字的字节数。
 1. 编写.proto文件，编译。定义了需要处理的结构化数据
 2. 编写writer和reader
+### 秒杀系统
+1. redis做缓存。
+2. 引入队列，然后将所有写DB操作在单队列中排队，完全串行处理。当达到库存阀值的时候就不在消费队列，并关闭购买功能。这就解决了超卖问题。
 
 ### 负载均衡
 ### 正则表达式
