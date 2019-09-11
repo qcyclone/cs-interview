@@ -1827,13 +1827,6 @@ void f(const Base &b){
 }
 
 57. 单调栈维护一个区间的最小值
-链接：https://www.nowcoder.com/questionTerminal/3f4867e9cbe54403ac5df55b8e678df9?orderByHotValue=0&page=20&onlyReference=false
-来源：牛客网
-
-#include
-#include
-#include
-using namespace std;
  
 int findMax(vector v) {
     int len = v.size(), res = 0;
@@ -1904,6 +1897,7 @@ public:
         }
         return l;
     }
+    //遍历数组，查找在[l, r]区间内有多少个数字
     int range(vector<int>& nums, int start, int end){
         int ans = 0 ;
         for(int i=0;i<nums.size();i ++){
@@ -1913,3 +1907,74 @@ public:
         return ans;
     }
 };
+
+60. 读写锁的实现
+//使用2个互斥锁实现
+class RWLock{
+public:
+	RWLock(): read_cnt(0){
+
+	}
+	void readLock(){
+		read_mtx.lock();
+		if(++read_cnt == 1)
+			write_mtx.lock();
+		read_mtx.unlock();
+	}
+	void readUnlock(){
+		read_mtx.lock();
+		if(--read_cnt == 0)
+			write_mtx.unlock();
+		read_mtx.unlock();
+	}
+	void writeLock(){
+		write_mtx.lock();
+	}
+	void writeUnlock(){
+		write_mtx.unlock();
+	}
+private:
+	mutex read_mux;
+	mutex write_mux;
+	int read_cnt;
+};
+
+//使用互斥锁+条件变量实现
+class RWLock {
+private:
+	mutex mtx;
+	condition_variable cond;
+	int stat; //==0无锁，>0读锁，<0写锁
+public:
+	RWLock(): stat(0){
+	}
+	void readLock(){
+		mtx.lock();
+		while(stat < 0){
+			cond.wait(mtx); //条件变量在wait时，从是作用在某个锁上。避免signal失效
+		}
+		++stat;
+		mtx.unlock();
+	}
+	void readUnlock(){
+		mtx.lock();
+		if(--stat == 0)
+			cond.notify_one(); //叫醒一个等待的写操作
+		mtx.unlock();
+	}
+	void writeLock(){
+		mtx.lock();
+		while(stat != 0)
+			cond.wait(mtx);
+		stat = -1;
+		mtx.unlock();
+	}
+	void writeUnlock(){
+		mtx.lock();
+		stat = 0;
+		cond.notify_all(); //叫醒所有等待的读和写操作
+		mtx.unlock();
+	}
+};
+
+61. 
