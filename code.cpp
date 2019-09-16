@@ -1950,7 +1950,7 @@ public:
 	}
 	void readLock(){
 		mtx.lock();
-		while(stat < 0){
+		while(stat < 0){    //判断条件和wait要是原子操作
 			cond.wait(mtx); //条件变量在wait时，从是作用在某个锁上。避免signal失效
 		}
 		++stat;
